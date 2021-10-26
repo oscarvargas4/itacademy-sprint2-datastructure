@@ -1,0 +1,20 @@
+1) Introducció MySQL i Workbench
+	https://www.youtube.com/embed/e8gaffa3Ca8
+
+2) Software necessari: Tutorial d'instal·lació de MySql Workbench
+	https://www.youtube.com/watch?v=OM4aZJW_Ojs
+
+3) Tutorial web: Entity Relationship Diagram Model: Aprèn a modelar diagrames E-R i relacions entre taules
+	https://www.guru99.com/er-diagram-tutorial-dbms.html
+
+4) Curs de MySQL 
+	https://www.youtube-nocookie.com/embed/7S_tz1z_5bA
+
+5) Tipus de dades MySQL
+	https://disenowebakus.net/tipos-de-datos-mysql.php
+
+6) Exemples de SQL: Exemples de consultes sql per aprendre SQL bàsic
+	https://docplayer.es/docview/30/13952720/#file=/storage/30/13952720/13952720.pdf
+
+7) Video tutorial: Disseny diagrames de BD: Durada: 21 min. Aprèn a dissenyar bases de dades amb MySql Workbench
+	https://www.youtube.com/embed/w-0IWyAeZ3M
