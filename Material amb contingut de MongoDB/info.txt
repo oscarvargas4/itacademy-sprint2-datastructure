@@ -1,0 +1,24 @@
+1) MongoDB NoSQL Explained
+    https://www.mongodb.com/nosql-explained
+
+2) MongoDB
+    https://docs.mongodb.com/manual/tutorial/
+
+3) Data Model Examples i Patterns
+    https://docs.mongodb.com/manual/applications/data-models/
+
+4) Compass Installation
+    https://www.mongodb.com/products/compass
+
+5) Compass Tutorial
+    https://docs.mongodb.com/compass/master/
+    
+6) Curso introducción a MongoDB COMPLETO
+    https://www.youtube.com/watch?v=DPdAfgmkNuE
+
+7) MongoDB Curso, Introducción Practica a NoSQL
+    https://www.youtube.com/watch?v=lWMemPN9t6Q&t=3529s
+
+8) Documents relationships
+    https://docs.mongodb.com/manual/applications/data-models-relationships/
+    

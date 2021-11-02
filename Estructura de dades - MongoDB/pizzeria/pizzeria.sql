@@ -4,7 +4,8 @@ USE pizzeria;
 CREATE TABLE provincies (
     provincia_id INT(11) NOT NULL AUTO_INCREMENT,
     nom VARCHAR(45),
-    PRIMARY KEY (provincia_id)
+    PRIMARY KEY (provincia_id),
+    UNIQUE KEY (provincia_id)
 );
 
 INSERT INTO provincies (provincia_id, nom)
@@ -16,6 +17,7 @@ CREATE TABLE localitats (
     nom VARCHAR(45),
     provincia_id INT(11) NOT NULL,
     PRIMARY KEY (localitat_id),
+    UNIQUE KEY (localitat_id),
     FOREIGN KEY (provincia_id) REFERENCES provincies(provincia_id)
 );
 
@@ -34,6 +36,7 @@ CREATE TABLE clients (
     localitat_id INT(11) NOT NULL,
     telefon INT(20),
     PRIMARY KEY (client_id),
+    UNIQUE KEY (client_id),
     FOREIGN KEY (provincia_id) REFERENCES provincies(provincia_id),
     FOREIGN KEY (localitat_id) REFERENCES localitats(localitat_id)
 );
@@ -49,7 +52,8 @@ VALUES ('1', 'nom1', 'cognom1', 'adress1', '08001', '1', '1', '123456780'),
 CREATE TABLE categories (
     categoria_id INT(11) NOT NULL AUTO_INCREMENT,
     nom VARCHAR(45) NOT NULL,
-    PRIMARY KEY (categoria_id)
+    PRIMARY KEY (categoria_id),
+    UNIQUE KEY (categoria_id)
 );
 
 INSERT INTO categories (categoria_id, nom)
@@ -84,6 +88,7 @@ CREATE TABLE botigues (
     provincia_id INT(11) NOT NULL,
     localitat_id INT(11) NOT NULL,
     PRIMARY KEY (botiga_id),
+    UNIQUE KEY (botiga_id),
     FOREIGN KEY (provincia_id) REFERENCES provincies(provincia_id),
     FOREIGN KEY (localitat_id) REFERENCES localitats(localitat_id)
 );
