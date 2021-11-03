@@ -1,12 +1,11 @@
-CREATE DATABASE IF NOT EXISTS youtube;
-
+CREATE DATABASE youtube;
 USE youtube;
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     user_id INT(11) NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     email VARCHAR(45) NOT NULL,
-    password VARCHAR(45) NOT NULL,
+    password VARCHAR(45) NOT NULL,    
     birthday DATE NOT NULL,
     gender TINYINT NOT NULL COMMENT '1 for female, 2 for male',
     country VARCHAR(45) NOT NULL,
@@ -14,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     PRIMARY KEY (user_id)
 );
 
-CREATE TABLE IF NOT EXISTS videos (
+CREATE TABLE videos (
     video_id INT(11) NOT NULL AUTO_INCREMENT,
     title VARCHAR(45) NOT NULL,
     description VARCHAR(100) NOT NULL,
@@ -32,7 +31,7 @@ CREATE TABLE IF NOT EXISTS videos (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-CREATE TABLE IF NOT EXISTS labels (
+CREATE TABLE labels (
     label_id INT(11) NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     video_id INT(11) NOT NULL,
@@ -40,39 +39,17 @@ CREATE TABLE IF NOT EXISTS labels (
     FOREIGN KEY (video_id) REFERENCES videos(video_id)
 );
 
-CREATE TABLE IF NOT EXISTS playlists (
-    playlist_id INT(11) NOT NULL AUTO_INCREMENT,
-    name VARCHAR(45) NOT NULL,
-    date DATE NOT NULL,
-    state TINYINT NOT NULL COMMENT '1: public, 2: private',
-    user_id INT(11) NOT NULL,
-    PRIMARY KEY (playlist_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-CREATE TABLE IF NOT EXISTS video_likes (
+CREATE TABLE video_likes (
     video_like_id INT(11) NOT NULL AUTO_INCREMENT,
     date_hour DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     video_id INT(11) NOT NULL,
     user_id INT(11) NOT NULL,
-    playlist_id INT(11),
     PRIMARY KEY (video_like_id),
-    FOREIGN KEY (video_id) REFERENCES videos(video_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (playlist_id) REFERENCES playlists(playlist_id)
-);
-
-CREATE TABLE IF NOT EXISTS video_dislikes (
-    video_dislike_id INT(11) NOT NULL AUTO_INCREMENT,
-    date_hour DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    video_id INT(11) NOT NULL,
-    user_id INT(11) NOT NULL,
-    PRIMARY KEY (video_dislike_id),
     FOREIGN KEY (video_id) REFERENCES videos(video_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-CREATE TABLE IF NOT EXISTS comments (
+CREATE TABLE comments (
     comment_id INT(11) NOT NULL AUTO_INCREMENT,
     description VARCHAR(100) NOT NULL,
     date_hour DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -83,7 +60,7 @@ CREATE TABLE IF NOT EXISTS comments (
     FOREIGN KEY (video_id) REFERENCES videos(video_id)
 );
 
-CREATE TABLE IF NOT EXISTS comment_likes (
+create table comment_likes (
     comment_like_id INT(11) NOT NULL AUTO_INCREMENT,
     date_hour DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     user_id INT(11) NOT NULL,
@@ -93,17 +70,7 @@ CREATE TABLE IF NOT EXISTS comment_likes (
     FOREIGN KEY (comment_id) REFERENCES comments(comment_id)
 );
 
-CREATE TABLE IF NOT EXISTS comment_dislikes (
-    comment_dislike_id INT(11) NOT NULL AUTO_INCREMENT,
-    date_hour DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    user_id INT(11) NOT NULL,
-    comment_id INT(11) NOT NULL,
-    PRIMARY KEY (comment_dislike_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (comment_id) REFERENCES comments(comment_id)
-);
-
-CREATE TABLE IF NOT EXISTS channels (
+CREATE TABLE channels (
     channel_id INT(11) NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     description VARCHAR(100) NOT NULL,
@@ -113,7 +80,7 @@ CREATE TABLE IF NOT EXISTS channels (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-CREATE TABLE IF NOT EXISTS channel_subscriptions (
+CREATE TABLE channel_subscriptions (
     sub_id INT(11) NOT NULL AUTO_INCREMENT,
     user_id INT(11) NOT NULL,
     channel_id INT(11) NOT NULL,
@@ -122,7 +89,15 @@ CREATE TABLE IF NOT EXISTS channel_subscriptions (
     FOREIGN KEY (channel_id) REFERENCES channels(channel_id)
 );
 
-
+CREATE TABLE playlists (
+    playlist_id INT(11) NOT NULL AUTO_INCREMENT,
+    name VARCHAR(45) NOT NULL,
+    date DATE NOT NULL,
+    state TINYINT NOT NULL COMMENT '1: public, 2: private',
+    user_id INT(11) NOT NULL,
+    PRIMARY KEY (playlist_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
 
 INSERT INTO users (user_id, name, email, password, birthday, gender, country, postal_code)
 VALUES ('1', 'nom1', 'nom1@gmail.com', 'password1', '1994-07-15', '2', 'country1', '0801'),
@@ -134,24 +109,14 @@ VALUES ('1', 'video1', 'description1', '1000', 'file1', '60', 'url1', '20', '1',
 ('2', 'video2', 'description2', '2000', 'file2', '70', 'url2', '20', '1', '1', '1', '2020-01-01 01-01-02', '2'),
 ('3', 'video3', 'description3', '3000', 'file3', '80', 'url3', '30', '1', '1', '0', '2020-01-01 01-01-03', '3');
 
-INSERT INTO labels ()
-VALUES ('1', 'name1', '1'),
-('2', 'name2', '3');
-
-INSERT INTO playlists (playlist_id, name, date, state, user_id)
-VALUES ('1', 'name1', '2020-02-03', '1', '1'),
-('2', 'name2', '2020-02-04', '2', '2');
-
-INSERT INTO video_likes (video_like_id, date_hour, video_id, user_id, playlist_id)
-VALUES ('1', '2020-01-01 01-01-01', '1', '1', '1'),
-('2', '2020-01-01 01-01-02', '2', '2', '2'),
-('3', '2020-01-01 01-01-03', '3', '3', null),
-('4', '2020-01-01 01-01-02', '2', '1', '1');
-
-INSERT INTO video_dislikes (video_dislike_id, date_hour, video_id, user_id)
+INSERT INTO video_likes (video_like_id, date_hour, video_id, user_id)
 VALUES ('1', '2020-01-01 01-01-01', '1', '1'),
 ('2', '2020-01-01 01-01-02', '2', '2'),
 ('3', '2020-01-01 01-01-03', '3', '3');
+
+INSERT INTO labels ()
+VALUES ('1', 'name1', '1'),
+('2', 'name2', '3');
 
 INSERT INTO comments (comment_id, description, date_hour, user_id, video_id)
 VALUES ('1', 'comment1', '2020-01-02 01-01-01', '1', '1'),
@@ -169,6 +134,11 @@ VALUES ('1', 'name1', 'description1', '2020-01-10', '1'),
 INSERT INTO channel_subscriptions (sub_id, user_id, channel_id)
 VALUES ('1', '2', '1'),
 ('2', '3', '1');
+
+INSERT INTO playlists (playlist_id, name, date, state, user_id)
+VALUES ('1', 'name1', '2020-02-03', '1', '1'),
+('2', 'name2', '2020-02-04', '2', '2');
+
 
 -- How many comments an user have made?
 SELECT COUNT(comment_id) AS '# OF COMMENTS FOR USER 1'
@@ -196,13 +166,3 @@ SELECT videos.video_id, users.name
 FROM videos
 INNER JOIN users
 ON users.user_id = videos.user_id;
-
--- ID = 1 PLAYLYSTS' VIDEOS
-SELECT playlists.playlist_id, playlists.user_id AS "playlist creator", videos.*
--- SELECT *
-FROM video_likes
-JOIN playlists
-	ON playlists.playlist_id = video_likes.playlist_id
-JOIN videos
-	ON videos.video_id = video_likes.video_id
-WHERE playlists.playlist_id = '1';

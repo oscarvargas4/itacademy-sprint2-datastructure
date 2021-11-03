@@ -1,8 +1,8 @@
 
-CREATE DATABASE spotify;
+CREATE DATABASE IF NOT EXISTS spotify;
 USE spotify;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
 	user_id INT(11) NOT NULL AUTO_INCREMENT,
     email VARCHAR(45) NOT NULL,
     password VARCHAR(45) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE users (
     PRIMARY KEY (user_id)    
 );
 
-CREATE TABLE subscriptions (
+CREATE TABLE IF NOT EXISTS subscriptions (
 	subscription_id INT(11) NOT NULL AUTO_INCREMENT,
     begin_date DATE NOT NULL,
     renew_date DATE NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE subscriptions (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-CREATE TABLE cards (
+CREATE TABLE IF NOT EXISTS cards (
 	card_id INT(16) NOT NULL,
     month INT(2) NOT NULL,
     year INT(4) NOT NULL,
@@ -40,14 +40,14 @@ CREATE TABLE cards (
     FOREIGN KEY (subscription_id) REFERENCES subscriptions(subscription_id)
 );
 
-CREATE TABLE paypal (
+CREATE TABLE IF NOT EXISTS paypal (
 	paypal_id VARCHAR(45) NOT NULL COMMENT 'Username',
     subscription_id INT(11) NOT NULL,
     PRIMARY KEY (paypal_id),
     FOREIGN KEY (subscription_id) REFERENCES subscriptions(subscription_id)
 );
 
-CREATE TABLE payments (
+CREATE TABLE IF NOT EXISTS payments (
 	order_number INT(11) NOT NULL AUTO_INCREMENT,
     date DATE NOT NULL,
     total INT(20) NOT NULL,
@@ -59,13 +59,22 @@ CREATE TABLE payments (
     FOREIGN KEY (paypal_id) REFERENCES paypal(paypal_id)
 );
 
-CREATE TABLE similar_music (
+CREATE TABLE IF NOT EXISTS similar_music (
 	similar_music_id INT(11) NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     PRIMARY KEY (similar_music_id)
 );
 
-CREATE TABLE artists (
+CREATE TABLE IF NOT EXISTS suggested_artists (
+	suggested_id INT(11) NOT NULL AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    similar_music_id INT(11) NOT NULL,
+    PRIMARY KEY (suggested_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (similar_music_id) REFERENCES similar_music(similar_music_id)
+);
+
+CREATE TABLE IF NOT EXISTS artists (
 	artist_id INT(11) NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     image_url VARCHAR(45),
@@ -74,7 +83,7 @@ CREATE TABLE artists (
     FOREIGN KEY (similar_music_id) REFERENCES similar_music(similar_music_id)
 );
 
-CREATE TABLE artist_followings (
+CREATE TABLE IF NOT EXISTS artist_followings (
 	following_id INT(11) NOT NULL AUTO_INCREMENT,
     user_id INT(11) NOT NULL,
     artist_id INT(11) NOT NULL,
@@ -83,7 +92,7 @@ CREATE TABLE artist_followings (
     FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
 );
 
-CREATE TABLE albums (
+CREATE TABLE IF NOT EXISTS albums (
 	album_id INT(11) NOT NULL AUTO_INCREMENT,
     title VARCHAR(45) NOT NULL,
 	date DATE NOT NULL,
@@ -93,7 +102,7 @@ CREATE TABLE albums (
     FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
 );
 
-CREATE TABLE album_likes (
+CREATE TABLE IF NOT EXISTS album_likes (
 	album_like_id INT(11) NOT NULL,
     user_id INT(11) NOT NULL,
     album_id INT(11) NOT NULL,
@@ -102,7 +111,7 @@ CREATE TABLE album_likes (
     FOREIGN KEY (album_id) REFERENCES albums(album_id)
 );
 
-CREATE TABLE songs (
+CREATE TABLE IF NOT EXISTS songs (
 	song_id INT(11) NOT NULL AUTO_INCREMENT,
     title VARCHAR(45) NOT NULL,
     duration INT(11) NOT NULL COMMENT 'in seconds',
@@ -112,7 +121,7 @@ CREATE TABLE songs (
     FOREIGN KEY (album_id) REFERENCES albums(album_id)
 );
 
-CREATE TABLE song_likes (
+CREATE TABLE IF NOT EXISTS song_likes (
 	song_like_id INT(11) NOT NULL AUTO_INCREMENT,
     user_id INT(11) NOT NULL,
     song_id INT(11) NOT NULL,
@@ -121,7 +130,7 @@ CREATE TABLE song_likes (
     FOREIGN KEY (song_id) REFERENCES songs(song_id)
 );
 
-CREATE TABLE playlists (
+CREATE TABLE IF NOT EXISTS playlists (
 	playlist_id INT(11) NOT NULL AUTO_INCREMENT,
     title VARCHAR(45) NOT NULL,
     songs_number INT(20),
@@ -134,16 +143,18 @@ CREATE TABLE playlists (
     FOREIGN KEY (user_id) REFERENCES users(user_id)    
 );
 
-CREATE TABLE playlist_shares (
+CREATE TABLE IF NOT EXISTS playlist_shares (
 	share_id INT(11) NOT NULL AUTO_INCREMENT,
     user_id INT(11) NOT NULL COMMENT 'User who shared',
     playlist_id INT(11) NOT NULL,
+    playlist_state TINYINT NOT NULL COMMENT '0:Active, 1:Deleted',
     PRIMARY KEY (share_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (playlist_id) REFERENCES playlists(playlist_id)
+    FOREIGN KEY (playlist_id) REFERENCES playlists(playlist_id),
+    CONSTRAINT Chk_playlist_active CHECK (playlist_state = 0)
 );
 
-CREATE TABLE playlist_additions (
+CREATE TABLE IF NOT EXISTS playlist_additions (
 	add_id INT(11) NOT NULL AUTO_INCREMENT,
     date DATE NOT NULL,
     song_id INT(11) NOT NULL,
@@ -170,8 +181,12 @@ VALUES ('1', '2020-01-01', '15', null, 'username1');
 INSERT INTO similar_music (similar_music_id, name)
 VALUES ('1', 'namemusic1');
 
+INSERT INTO suggested_artists (suggested_id, user_id, similar_music_id)
+VALUES ('1', '1', '1');
+
 INSERT INTO artists (artist_id, name, image_url, similar_music_id)
-VALUES ('1', 'name1', 'image10', '1');
+VALUES ('1', 'name1', 'image10', '1'),
+('2', 'name2', 'image20', '1');
 
 INSERT INTO artist_followings (following_id, user_id, artist_id)
 VALUES ('1', '1', '1');
@@ -191,8 +206,8 @@ VALUES ('1', '1', '1');
 INSERT INTO playlists (playlist_id, title, songs_number, date, playlist_state, deleted_day, user_id)
 VALUES ('1', 'playlist1', '1', '2020-02-02', '0', null, '1');
 
-INSERT INTO playlist_shares (share_id, user_id, playlist_id)
-VALUES ('1', '1', '1');
+INSERT INTO playlist_shares (share_id, user_id, playlist_id, playlist_state)
+VALUES ('1', '1', '1', '0');
 
 INSERT INTO playlist_additions (add_id, date, song_id, user_id, playlist_id)
 VALUES ('1', '2020-01-01', '1', '1', '1');
@@ -204,3 +219,12 @@ SELECT * FROM artist_followings;
 SELECT playlists.playlist_id, users.user_id
 FROM playlists
 INNER JOIN users ON playlists.user_id = users.user_id;
+
+-- SUGGESTED ARTIST
+SELECT *
+FROM artists
+JOIN similar_music
+	ON similar_music.similar_music_id = artists.similar_music_id
+JOIN suggested_artists
+	ON suggested_artists.similar_music_id = similar_music.similar_music_id
+WHERE suggested_artists.suggested_id = '1';

@@ -1,68 +1,69 @@
-CREATE DATABASE optica;
+CREATE DATABASE IF NOT EXISTS optica;
+
 USE optica;
 
-
-CREATE TABLE proveidors (
-proveidor_id INT(11) NOT NULL AUTO_INCREMENT,
-nom VARCHAR(60) NOT NULL,
-carrer VARCHAR(60) NOT NULL,
-carrer_numero INT(11) NOT NULL,
-pis INT(11) NOT NULL,
-porta INT(11) NOT NULL,
-codi_postal INT(11) NOT NULL,
-pais VARCHAR(60) NOT NULL,
-telefon INT(60) NOT NULL,
-FAX INT(60),
-NIF VARCHAR(60) NOT NULL,
-PRIMARY KEY(proveidor_id),
-UNIQUE KEY (telefon)
+CREATE TABLE IF NOT EXISTS proveidors (
+    proveidor_id INT(11) NOT NULL AUTO_INCREMENT,
+    nom VARCHAR(60) NOT NULL,
+    carrer VARCHAR(60) NOT NULL,
+    carrer_numero INT(11) NOT NULL,
+    pis INT(11) NOT NULL,
+    porta INT(11) NOT NULL,
+    codi_postal INT(11) NOT NULL,
+    pais VARCHAR(60) NOT NULL,
+    telefon INT(60) NOT NULL,
+    FAX INT(60),
+    NIF VARCHAR(60) NOT NULL,
+    PRIMARY KEY(proveidor_id),
+    UNIQUE KEY (telefon)
 );
 
-CREATE TABLE marques (
-marca_id INT(11) NOT NULL AUTO_INCREMENT,
-nom_marca VARCHAR(60) NOT NULL,
-proveidor_id INT(11) NOT NULL,
-PRIMARY KEY(marca_id),
-FOREIGN KEY(proveidor_id) REFERENCES proveidors(proveidor_id)
+CREATE TABLE IF NOT EXISTS marques (
+    marca_id INT(11) NOT NULL AUTO_INCREMENT,
+    nom_marca VARCHAR(60) NOT NULL,
+    proveidor_id INT(11) NOT NULL,
+    PRIMARY KEY(marca_id),
+    FOREIGN KEY(proveidor_id) REFERENCES proveidors(proveidor_id)
 );
 
-CREATE TABLE clients (
-client_id INT(11) NOT NULL AUTO_INCREMENT,
-nom VARCHAR(60) NOT NULL,
-address VARCHAR(60) NOT NULL,
-telefon INT(11) NOT NULL,
-correu VARCHAR(60) NOT NULL,
-data_registre DATE NOT NULL,
-recomenat VARCHAR(60),
-PRIMARY KEY(client_id),
-UNIQUE KEY (correu)
+CREATE TABLE IF NOT EXISTS clients (
+    client_id INT(11) NOT NULL AUTO_INCREMENT,
+    nom VARCHAR(60) NOT NULL,
+    address VARCHAR(60) NOT NULL,
+    telefon INT(11) NOT NULL,
+    correu VARCHAR(60) NOT NULL,
+    data_registre DATE NOT NULL,
+    recomenat VARCHAR(60),
+    PRIMARY KEY(client_id),
+    UNIQUE KEY (correu)
 );
 
-CREATE TABLE empleats (
-empleat_id INT(11) NOT NULL AUTO_INCREMENT,
-nom VARCHAR(60) NOT NULL,
-PRIMARY KEY(empleat_id)
+CREATE TABLE IF NOT EXISTS empleats (
+    empleat_id INT(11) NOT NULL AUTO_INCREMENT,
+    nom VARCHAR(60) NOT NULL,
+    PRIMARY KEY(empleat_id)
 );
 
-CREATE TABLE ulleres (
-ullera_id INT(11) NOT NULL AUTO_INCREMENT,
-graduacio_vidre1 INT(11) NOT NULL,
-graduacio_vidre2 INT(11) NOT NULL,
-tipus_montura VARCHAR(60) NOT NULL,
-color_montura VARCHAR(60) NOT NULL,
-color_vidres VARCHAR(60) NOT NULL,
-preu INT(11) NOT NULL,
-proveidor_id INT(11) NOT NULL,
-marca_id INT(11) NOT NULL,
-client_id INT(11),
-empleat_id INT(11),
-factura_date DATE,
-PRIMARY KEY(ullera_id),
-FOREIGN KEY(proveidor_id) REFERENCES proveidors(proveidor_id),
-FOREIGN KEY(marca_id) REFERENCES marques(marca_id),
-FOREIGN KEY(client_id) REFERENCES clients(client_id),
-FOREIGN KEY(empleat_id) REFERENCES empleats(empleat_id)
+CREATE TABLE IF NOT EXISTS ulleres (
+    ullera_id INT(11) NOT NULL AUTO_INCREMENT,
+    graduacio_vidre1 INT(11) NOT NULL,
+    graduacio_vidre2 INT(11) NOT NULL,
+    tipus_montura VARCHAR(60) NOT NULL,
+    color_montura VARCHAR(60) NOT NULL,
+    color_vidres VARCHAR(60) NOT NULL,
+    preu INT(11) NOT NULL,
+    proveidor_id INT(11) NOT NULL,
+    marca_id INT(11) NOT NULL,
+    client_id INT(11),
+    empleat_id INT(11),
+    factura_date DATE,
+    PRIMARY KEY(ullera_id),
+    FOREIGN KEY(proveidor_id) REFERENCES proveidors(proveidor_id),
+    FOREIGN KEY(marca_id) REFERENCES marques(marca_id),
+    FOREIGN KEY(client_id) REFERENCES clients(client_id),
+    FOREIGN KEY(empleat_id) REFERENCES empleats(empleat_id)
 );
+
 
 INSERT INTO proveidors (proveidor_id, nom, carrer, carrer_numero, pis, porta, codi_postal, pais, telefon, FAX, NIF) 
 VALUES (1, 'proveidor1', 'carrer1', '1', '1', '1', '08001', 'Espanya', '123456789', '123456789', 'A123456789'),
@@ -141,5 +142,3 @@ INNER JOIN proveidors
 ON proveidors.proveidor_id = ulleres.proveidor_id
 WHERE factura_date IS NOT NULL
 ORDER BY proveidors.proveidor_id;
-
-

@@ -1,27 +1,5 @@
 // use pizzeria
 
-db.createCollection("provincies", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["provincia_id", "nom"],
-            properties: {
-                provincia_id: {
-                    bsonType: "number"
-                },
-                nom: {
-                    bsonType: "string"
-                }
-            }
-        }
-    }
-})
-
-db.provincies.insertMany([
-    { provincia_id: 1, nom: "pronvincia1" },
-    { provincia_id: 2, nom: "pronvincia2" }
-])
-
 db.createCollection("localitats", {
     validator: {
         $jsonSchema: {
@@ -52,7 +30,7 @@ db.createCollection("clients", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["client_id", "nom", "cognom", "address", "codi_postal", "provincia_id", "localitat_id"],
+            required: ["client_id", "nom", "cognom", "address", "codi_postal", "localitat_id"],
             properties: {
                 client_id: {
                     bsonType: "number"
@@ -69,9 +47,6 @@ db.createCollection("clients", {
                 codi_postal: {
                     bsonType: "number"
                 },
-                provincia_id: {
-                    bsonType: "number"
-                },
                 localitat_id: {
                     bsonType: "number"
                 },
@@ -84,12 +59,12 @@ db.createCollection("clients", {
 })
 
 db.clients.insertMany([
-    { client_id: 1, nom: "nom1", cognom: "cognom1", address: "address1", codi_postal: 08001, provincia_id: 1, localitat_id: 1, telefon: 123456780 },
-    { client_id: 2, nom: "nom2", cognom: "cognom2", address: "address2", codi_postal: 08002, provincia_id: 1, localitat_id: 2, telefon: 123456781 },
-    { client_id: 3, nom: "nom3", cognom: "cognom3", address: "address3", codi_postal: 08003, provincia_id: 2, localitat_id: 1, telefon: 123456782 },
-    { client_id: 4, nom: "nom4", cognom: "cognom4", address: "address4", codi_postal: 08001, provincia_id: 1, localitat_id: 1, telefon: 123456783 },
-    { client_id: 5, nom: "nom5", cognom: "cognom5", address: "address5", codi_postal: 08002, provincia_id: 1, localitat_id: 2, telefon: 123456784 },
-    { client_id: 6, nom: "nom6", cognom: "cognom6", address: "address6", codi_postal: 08003, provincia_id: 2, localitat_id: 1, telefon: 123456785 }
+    { client_id: 1, nom: "nom1", cognom: "cognom1", address: "address1", codi_postal: 08001, localitat_id: 1, telefon: 123456780 },
+    { client_id: 2, nom: "nom2", cognom: "cognom2", address: "address2", codi_postal: 08002, localitat_id: 2, telefon: 123456781 },
+    { client_id: 3, nom: "nom3", cognom: "cognom3", address: "address3", codi_postal: 08003, localitat_id: 1, telefon: 123456782 },
+    { client_id: 4, nom: "nom4", cognom: "cognom4", address: "address4", codi_postal: 08001, localitat_id: 1, telefon: 123456783 },
+    { client_id: 5, nom: "nom5", cognom: "cognom5", address: "address5", codi_postal: 08002, localitat_id: 2, telefon: 123456784 },
+    { client_id: 6, nom: "nom6", cognom: "cognom6", address: "address6", codi_postal: 08003, localitat_id: 1, telefon: 123456785 }
 ])
 
 db.createCollection("categories", {
@@ -158,7 +133,7 @@ db.createCollection("botigues", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["botiga_id", "address", "codi_postal", "provincia_id", "localitat_id"],
+            required: ["botiga_id", "address", "codi_postal", "localitat_id"],
             properties: {
                 botiga_id: {
                     bsonType: "number"
@@ -167,9 +142,6 @@ db.createCollection("botigues", {
                     bsonType: "string"
                 },
                 codi_postal: {
-                    bsonType: "number"
-                },
-                provincia_id: {
                     bsonType: "number"
                 },
                 localitat_id: {
@@ -181,8 +153,8 @@ db.createCollection("botigues", {
 })
 
 db.botigues.insertMany([
-    { botiga_id: 1, address: "address1", codi_postal: 08001, provincia_id: 1, localitat_id: 1 },
-    { botiga_id: 2, address: "address2", codi_postal: 08002, provincia_id: 2, localitat_id: 2 }
+    { botiga_id: 1, address: "address1", codi_postal: 08001, localitat_id: 1 },
+    { botiga_id: 2, address: "address2", codi_postal: 08002, localitat_id: 2 }
 ])
 
 db.createCollection("empleats", {
@@ -234,7 +206,7 @@ db.createCollection("comandes", {
             required: ["comanda_id", "data_hora", "lliurament", "producte_id", "quantitat", "preu_total", "botiga_id", "empleat_id", "client_id"],
             properties: {
                 comanda_id: {
-                    bsonType: "string"
+                    bsonType: "number"
                 },
                 data_hora: {
                     bsonType: "date"
