@@ -21,4 +21,7 @@
 
 8) Documents relationships
     https://docs.mongodb.com/manual/applications/data-models-relationships/
+
+9) ****Cargar archivo js en Mongo Shell
+    https://www.tutorialesprogramacionya.com/mongodbya/detalleconcepto.php?punto=26&codigo=26&inicio=20
     

@@ -2,6 +2,12 @@ CREATE DATABASE IF NOT EXISTS optica;
 
 USE optica;
 
+DROP TABLE IF EXISTS proveidors,
+marques,
+clients,
+empleats,
+ulleres;
+
 CREATE TABLE IF NOT EXISTS proveidors (
     proveidor_id INT(11) NOT NULL AUTO_INCREMENT,
     nom VARCHAR(60) NOT NULL,
@@ -16,14 +22,6 @@ CREATE TABLE IF NOT EXISTS proveidors (
     NIF VARCHAR(60) NOT NULL,
     PRIMARY KEY(proveidor_id),
     UNIQUE KEY (telefon)
-);
-
-CREATE TABLE IF NOT EXISTS marques (
-    marca_id INT(11) NOT NULL AUTO_INCREMENT,
-    nom_marca VARCHAR(60) NOT NULL,
-    proveidor_id INT(11) NOT NULL,
-    PRIMARY KEY(marca_id),
-    FOREIGN KEY(proveidor_id) REFERENCES proveidors(proveidor_id)
 );
 
 CREATE TABLE IF NOT EXISTS clients (
@@ -59,7 +57,6 @@ CREATE TABLE IF NOT EXISTS ulleres (
     factura_date DATE,
     PRIMARY KEY(ullera_id),
     FOREIGN KEY(proveidor_id) REFERENCES proveidors(proveidor_id),
-    FOREIGN KEY(marca_id) REFERENCES marques(marca_id),
     FOREIGN KEY(client_id) REFERENCES clients(client_id),
     FOREIGN KEY(empleat_id) REFERENCES empleats(empleat_id)
 );
@@ -70,16 +67,6 @@ VALUES (1, 'proveidor1', 'carrer1', '1', '1', '1', '08001', 'Espanya', '12345678
 ('2', 'proveidor2', 'carrer2', '2', '2', '2', '08001', 'Espanya', '123456780', '123456780', 'A123456780'),
 ('3', 'proveidor3', 'carrer3', '3', '3', '3', '08003', 'Espanya', '123456781', '123456781', 'A123456781'),
 ('4', 'proveidor4', 'carrer4', '4', '4', '4', '08004', 'Espanya', '123456782', '123456782', 'A123456781');
-
-INSERT INTO marques (marca_id, nom_marca, proveidor_id) VALUES ('1', 'marca1', '1'),
-('2', 'marca2', '1'),
-('3', 'marca3', '1'),
-('4', 'marca4', '1'),
-('5', 'marca5', '4'),
-('6', 'marca6', '4'),
-('7', 'marca7', '2'),
-('8', 'marca8', '2'),
-('9', 'marca9', '3');
 
 INSERT INTO empleats (empleat_id, nom) VALUES ('1', 'Oscar'),
 ('2', 'Mario'),

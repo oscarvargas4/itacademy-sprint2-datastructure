@@ -1,3 +1,6 @@
+// use youtube 
+db = db.getSiblingDB('youtube')
+
 db.createCollection("users", {
     validator: {
         $jsonSchema: {
@@ -127,9 +130,43 @@ db.createCollection("labels", {
     }
 })
 
-db.labls.insertMany([
+db.labels.insertMany([
     { label_id: 1, name: "name1", video_id: 1 },
     { label_id: 2, name: "name2", video_id: 3 },
+])
+
+db.createCollection("playlists", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["playlist_id", "name", "date", "state", "user_id"],
+            properties: {
+                playlist_id: {
+                    bsonType: "number"
+                },
+                name: {
+                    bsonType: "string"
+                },
+                date: {
+                    bsonType: "date"
+                },
+                state: {
+                    bsonType: "number",
+                    minimum: 1,
+                    maximum: 2,
+                    description: "1: public, 2: private"
+                },
+                user_id: {
+                    bsonType: "number"
+                }
+            }
+        }
+    }
+})
+
+db.playlists.insertMany([
+    { playlist_id: 1, name: "name1", date: new Date("2020-02-03"), state: 1, user_id: 1 },
+    { playlist_id: 2, name: "name2", date: new Date("2020-02-04"), state: 2, user_id: 2 },
 ])
 
 db.createCollection("video_likes", {
@@ -149,6 +186,9 @@ db.createCollection("video_likes", {
                 },
                 user_id : {
                     bsonType: "number"
+                },
+                playlist_id: {
+                    bsonType: "number"
                 }
             }
         }
@@ -156,9 +196,38 @@ db.createCollection("video_likes", {
 })
 
 db.video_likes.insertMany([
-    { video_like_id: 1, date_hour: new Date("2020-01-01T16:00:00.001Z"), video_id: 1, user_id: 1 },
-    { video_like_id: 2, date_hour: new Date("2020-01-01T16:00:02.001Z"), video_id: 2, user_id: 2 },
+    { video_like_id: 1, date_hour: new Date("2020-01-01T16:00:00.001Z"), video_id: 1, user_id: 1, playlist_id: 1 },
+    { video_like_id: 2, date_hour: new Date("2020-01-01T16:00:02.001Z"), video_id: 2, user_id: 2, playlist_id: 2 },
     { video_like_id: 3, date_hour: new Date("2020-01-01T16:00:03.001Z"), video_id: 3, user_id: 3 },
+])
+
+db.createCollection("video_dislikes", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["video_dislike_id", "date_hour", "video_id", "user_id"],
+            properties: {
+                video_dislike_id: {
+                    bsonType: "number"
+                },
+                date_hour: {
+                    bsonType: "date"
+                },
+                video_id: {
+                    bsonType: "number"
+                },
+                user_id : {
+                    bsonType: "number"
+                }
+            }
+        }
+    }
+})
+
+db.video_dislikes.insertMany([
+    { video_dislike_id: 1, date_hour: new Date("2020-01-01T16:00:00.001Z"), video_id: 1, user_id: 1 },
+    { video_dislike_id: 2, date_hour: new Date("2020-01-01T16:00:02.001Z"), video_id: 2, user_id: 2 },
+    { video_dislike_id: 3, date_hour: new Date("2020-01-01T16:00:03.001Z"), video_id: 3, user_id: 3 },
 ])
 
 db.createCollection("comments", {
@@ -221,6 +290,34 @@ db.comment_likes.insertMany([
     { comment_like_id: 2, date_hour: new Date("2020-02-01T16:11:11.001Z"), user_id: 1, comment_id: 3},
 ])
 
+db.createCollection("comment_dislikes", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["comment_dislike_id", "date_hour", "user_id", "comment_id"],
+            properties: {
+                comment_dislike_id: {
+                    bsonType: "number"
+                },
+                date_hour: {
+                    bsonType: "date"
+                },
+                user_id : {
+                    bsonType: "number"
+                },
+                comment_id: {
+                    bsonType: "number"
+                }
+            }
+        }
+    }
+})
+
+db.comment_dislikes.insertMany([
+    { comment_dislike_id: 1, date_hour: new Date("2020-01-01T16:11:11.001Z"), user_id: 3, comment_id: 1},
+    { comment_dislike_id: 2, date_hour: new Date("2020-02-01T16:11:11.001Z"), user_id: 1, comment_id: 3},
+])
+
 db.createCollection("channels", {
     validator: {
         $jsonSchema: {
@@ -277,36 +374,5 @@ db.channel_subscriptions.insertMany([
     { sub_id: 2, user_id: 3, channel_id: 1 },
 ])
 
-db.createCollection("playlists", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["playlist_id", "name", "date", "state", "user_id"],
-            properties: {
-                playlist_id: {
-                    bsonType: "number"
-                },
-                name: {
-                    bsonType: "string"
-                },
-                date: {
-                    bsonType: "date"
-                },
-                state: {
-                    bsonType: "number",
-                    minimum: 1,
-                    maximum: 2,
-                    description: "1: public, 2: private"
-                },
-                user_id: {
-                    bsonType: "number"
-                }
-            }
-        }
-    }
-})
+// printjson(db.adminCommand('listDatabases'))
 
-db.playlists.insertMany([
-    { playlist_id: 1, name: "name1", date: new Date("2020-02-03"), state: 1, user_id: 1 },
-    { playlist_id: 2, name: "name2", date: new Date("2020-02-04"), state: 2, user_id: 2 },
-])

@@ -2,6 +2,8 @@
 CREATE DATABASE IF NOT EXISTS spotify;
 USE spotify;
 
+DROP TABLE IF EXISTS users, subscriptions, payments, cards, artists, artist_followings, artist_enrollment, albums, album_likes, songs, song_likes, playlists, playlist_additions;
+
 CREATE TABLE IF NOT EXISTS users (
 	user_id INT(11) NOT NULL AUTO_INCREMENT,
     email VARCHAR(45) NOT NULL,
@@ -17,6 +19,9 @@ CREATE TABLE IF NOT EXISTS users (
     PRIMARY KEY (user_id)    
 );
 
+INSERT INTO users (user_id, email, password, name, birthday, gender, country, postal_code, user_type) 
+VALUES('1', 'email1@gmail.com', '12345EWS', 'name1', '1994-07-05', '1', 'Spain', '08002', '2');
+
 CREATE TABLE IF NOT EXISTS subscriptions (
 	subscription_id INT(11) NOT NULL AUTO_INCREMENT,
     begin_date DATE NOT NULL,
@@ -30,6 +35,9 @@ CREATE TABLE IF NOT EXISTS subscriptions (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+INSERT INTO subscriptions (subscription_id, begin_date, renew_date, payment_method, user_id, user_type)
+VALUES ('1', '2020-01-01', '2020-02-01', '2', '1', '2');
+
 CREATE TABLE IF NOT EXISTS cards (
 	card_id INT(16) NOT NULL,
     month INT(2) NOT NULL,
@@ -40,48 +48,29 @@ CREATE TABLE IF NOT EXISTS cards (
     FOREIGN KEY (subscription_id) REFERENCES subscriptions(subscription_id)
 );
 
-CREATE TABLE IF NOT EXISTS paypal (
-	paypal_id VARCHAR(45) NOT NULL COMMENT 'Username',
-    subscription_id INT(11) NOT NULL,
-    PRIMARY KEY (paypal_id),
-    FOREIGN KEY (subscription_id) REFERENCES subscriptions(subscription_id)
-);
-
 CREATE TABLE IF NOT EXISTS payments (
 	order_number INT(11) NOT NULL AUTO_INCREMENT,
     date DATE NOT NULL,
     total INT(20) NOT NULL,
     card_id INT(16),
     paypal_id VARCHAR(45),
-    -- CONSTRAINT Chk_payments CHECK (card_id>0 OR paypal_id<>''): is not possible, because constraint check are not allowed with foreign keys,
     PRIMARY KEY (order_number),
-    FOREIGN KEY (card_id) REFERENCES cards(card_id),
-    FOREIGN KEY (paypal_id) REFERENCES paypal(paypal_id)
+    FOREIGN KEY (card_id) REFERENCES cards(card_id)
 );
 
-CREATE TABLE IF NOT EXISTS similar_music (
-	similar_music_id INT(11) NOT NULL AUTO_INCREMENT,
-    name VARCHAR(45) NOT NULL,
-    PRIMARY KEY (similar_music_id)
-);
-
-CREATE TABLE IF NOT EXISTS suggested_artists (
-	suggested_id INT(11) NOT NULL AUTO_INCREMENT,
-    user_id INT(11) NOT NULL,
-    similar_music_id INT(11) NOT NULL,
-    PRIMARY KEY (suggested_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (similar_music_id) REFERENCES similar_music(similar_music_id)
-);
+INSERT INTO payments (order_number, date, total, card_id, paypal_id)
+VALUES ('1', '2020-01-01', '15', null, 'username1');
 
 CREATE TABLE IF NOT EXISTS artists (
 	artist_id INT(11) NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
     image_url VARCHAR(45),
-    similar_music_id INT(11) NOT NULL,
-    PRIMARY KEY (artist_id),
-    FOREIGN KEY (similar_music_id) REFERENCES similar_music(similar_music_id)
+    PRIMARY KEY (artist_id)
 );
+
+INSERT INTO artists (artist_id, name, image_url)
+VALUES ('1', 'name1', 'image10'),
+('2', 'name2', 'image20');
 
 CREATE TABLE IF NOT EXISTS artist_followings (
 	following_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -91,6 +80,21 @@ CREATE TABLE IF NOT EXISTS artist_followings (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
 );
+
+INSERT INTO artist_followings (following_id, user_id, artist_id)
+VALUES ('1', '1', '1');
+
+CREATE TABLE IF NOT EXISTS artist_enrollment (
+	id INT(11) NOT NULL AUTO_INCREMENT,
+    artist_id INT(11) NOT NULL,
+    artist2_id INT(11) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (artist_id) REFERENCES artists (artist_id),
+    FOREIGN KEY (artist2_id) REFERENCES artists (artist_id)
+);
+
+INSERT INTO artist_enrollment ()
+VALUES ('1', '1', '2');
 
 CREATE TABLE IF NOT EXISTS albums (
 	album_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -102,6 +106,9 @@ CREATE TABLE IF NOT EXISTS albums (
     FOREIGN KEY (artist_id) REFERENCES artists(artist_id)
 );
 
+INSERT INTO albums(album_id, title, date, image_url, artist_id)
+VALUES ('1', 'title1', '2020-02-02', 'image3', '1');
+
 CREATE TABLE IF NOT EXISTS album_likes (
 	album_like_id INT(11) NOT NULL,
     user_id INT(11) NOT NULL,
@@ -110,6 +117,9 @@ CREATE TABLE IF NOT EXISTS album_likes (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (album_id) REFERENCES albums(album_id)
 );
+
+INSERT INTO album_likes (album_like_id, user_id, album_id)
+VALUES ('1', '1', '1');
 
 CREATE TABLE IF NOT EXISTS songs (
 	song_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -121,6 +131,9 @@ CREATE TABLE IF NOT EXISTS songs (
     FOREIGN KEY (album_id) REFERENCES albums(album_id)
 );
 
+INSERT INTO songs (song_id, title, duration, reproductions, album_id)
+VALUES ('1', 'title1', '67', '100', '1');
+
 CREATE TABLE IF NOT EXISTS song_likes (
 	song_like_id INT(11) NOT NULL AUTO_INCREMENT,
     user_id INT(11) NOT NULL,
@@ -129,6 +142,9 @@ CREATE TABLE IF NOT EXISTS song_likes (
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (song_id) REFERENCES songs(song_id)
 );
+
+INSERT INTO song_likes (song_like_id, user_id, song_id)
+VALUES ('1', '1', '1');
 
 CREATE TABLE IF NOT EXISTS playlists (
 	playlist_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -143,16 +159,8 @@ CREATE TABLE IF NOT EXISTS playlists (
     FOREIGN KEY (user_id) REFERENCES users(user_id)    
 );
 
-CREATE TABLE IF NOT EXISTS playlist_shares (
-	share_id INT(11) NOT NULL AUTO_INCREMENT,
-    user_id INT(11) NOT NULL COMMENT 'User who shared',
-    playlist_id INT(11) NOT NULL,
-    playlist_state TINYINT NOT NULL COMMENT '0:Active, 1:Deleted',
-    PRIMARY KEY (share_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (playlist_id) REFERENCES playlists(playlist_id),
-    CONSTRAINT Chk_playlist_active CHECK (playlist_state = 0)
-);
+INSERT INTO playlists (playlist_id, title, songs_number, date, playlist_state, deleted_day, user_id)
+VALUES ('1', 'playlist1', '1', '2020-02-02', '0', null, '1');
 
 CREATE TABLE IF NOT EXISTS playlist_additions (
 	add_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -166,49 +174,6 @@ CREATE TABLE IF NOT EXISTS playlist_additions (
     FOREIGN KEY (playlist_id) REFERENCES playlists(playlist_id)
 );
 
-INSERT INTO users (user_id, email, password, name, birthday, gender, country, postal_code, user_type) 
-VALUES('1', 'email1@gmail.com', '12345EWS', 'name1', '1994-07-05', '1', 'Spain', '08002', '2');
-
-INSERT INTO subscriptions (subscription_id, begin_date, renew_date, payment_method, user_id, user_type)
-VALUES ('1', '2020-01-01', '2020-02-01', '2', '1', '2');
-
-INSERT INTO paypal (paypal_id, subscription_id)
-VALUES ('username1', '1');
-
-INSERT INTO payments (order_number, date, total, card_id, paypal_id)
-VALUES ('1', '2020-01-01', '15', null, 'username1');
-
-INSERT INTO similar_music (similar_music_id, name)
-VALUES ('1', 'namemusic1');
-
-INSERT INTO suggested_artists (suggested_id, user_id, similar_music_id)
-VALUES ('1', '1', '1');
-
-INSERT INTO artists (artist_id, name, image_url, similar_music_id)
-VALUES ('1', 'name1', 'image10', '1'),
-('2', 'name2', 'image20', '1');
-
-INSERT INTO artist_followings (following_id, user_id, artist_id)
-VALUES ('1', '1', '1');
-
-INSERT INTO albums(album_id, title, date, image_url, artist_id)
-VALUES ('1', 'title1', '2020-02-02', 'image3', '1');
-
-INSERT INTO album_likes (album_like_id, user_id, album_id)
-VALUES ('1', '1', '1');
-
-INSERT INTO songs (song_id, title, duration, reproductions, album_id)
-VALUES ('1', 'title1', '67', '100', '1');
-
-INSERT INTO song_likes (song_like_id, user_id, song_id)
-VALUES ('1', '1', '1');
-
-INSERT INTO playlists (playlist_id, title, songs_number, date, playlist_state, deleted_day, user_id)
-VALUES ('1', 'playlist1', '1', '2020-02-02', '0', null, '1');
-
-INSERT INTO playlist_shares (share_id, user_id, playlist_id, playlist_state)
-VALUES ('1', '1', '1', '0');
-
 INSERT INTO playlist_additions (add_id, date, song_id, user_id, playlist_id)
 VALUES ('1', '2020-01-01', '1', '1', '1');
 
@@ -220,11 +185,14 @@ SELECT playlists.playlist_id, users.user_id
 FROM playlists
 INNER JOIN users ON playlists.user_id = users.user_id;
 
--- SUGGESTED ARTIST
-SELECT *
+
+-- Querie artistas relacionados con los que sigue un usuario
+
+SELECT artist_enrollment.*
 FROM artists
-JOIN similar_music
-	ON similar_music.similar_music_id = artists.similar_music_id
-JOIN suggested_artists
-	ON suggested_artists.similar_music_id = similar_music.similar_music_id
-WHERE suggested_artists.suggested_id = '1';
+JOIN artist_followings
+	ON artist_followings.artist_id = artists.artist_id
+JOIN artist_enrollment
+	ON artist_enrollment.artist_id = artists.artist_id
+WHERE artist_followings.user_id = '1';
+

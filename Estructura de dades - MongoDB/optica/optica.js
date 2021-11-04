@@ -1,4 +1,5 @@
-db.getSiblingDB('optica')
+// use optica
+db = db.getSiblingDB('optica')
 
 
 // https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/

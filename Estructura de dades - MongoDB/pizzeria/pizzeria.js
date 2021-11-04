@@ -1,4 +1,5 @@
 // use pizzeria
+db = db.getSiblingDB('pizzeria')
 
 db.createCollection("localitats", {
     validator: {
