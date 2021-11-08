@@ -1,6 +1,10 @@
 // use pizzeria
 db = db.getSiblingDB('pizzeria')
 
+db.dropDatabase()
+
+db = db.getSiblingDB('pizzeria')
+
 db.createCollection("localitats", {
     validator: {
         $jsonSchema: {
@@ -200,13 +204,13 @@ db.empleats.insertMany([
     { empleat_id: 4, nom: "nom4", cognom: "cognom4", NIF: "12345678D", telefon: 123456773, tipus_empleat: 1, botiga_id: 2 },
 ])
 
-db.createCollection("comandes", {
+db.createCollection("tiquets", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["comanda_id", "data_hora", "lliurament", "producte_id", "quantitat", "preu_total", "botiga_id", "empleat_id", "client_id"],
+            required: ["tiquet_id", "data_hora", "lliurament", "botiga_id", "empleat_id", "client_id", "comandes"],
             properties: {
-                comanda_id: {
+                tiquet_id: {
                     bsonType: "number"
                 },
                 data_hora: {
@@ -217,17 +221,6 @@ db.createCollection("comandes", {
                     minimum: 0,
                     maximum: 1,
                     description: "1 repartiment a domicili, 0 per a recollir en botiga"
-                },
-                producte_id: {
-                    bsonType: "number"
-                },
-                quantitat: {
-                    bsonType: "number",
-                    minimum: 1
-                },
-                preu_total: {
-                    bsonType: "number",
-                    minimum: 0
                 },
                 botiga_id: {
                     bsonType: "number"
@@ -240,31 +233,63 @@ db.createCollection("comandes", {
                 },
                 client_id: {
                     bsonType: "number"
+                },
+                comandes: {
+                    bsonType: ["array"],
+                    items: {
+                        bsonType: "object",
+                        required: ["producte_id", "quantitat", "preu_total"],
+                        properties: {
+                            producte_id: { bsonType: "number" },
+                            quantitat: { bsonType: "number" },
+                            preu_total: { bsonType: "number" }
+                        },
+                    },
+                    description: "must be an array of objects"
                 }
             }
         }
     }
 })
 
-db.comandes.insertMany([
-    { comanda_id: 1, data_hora: new Date("2020-01-01T16:59:59.001Z"), lliurament: 1, producte_id: 1, quantitat: 1, preu_total: 10, botiga_id: 1, empleat_id: 2, data_hora_lliurament: new Date("2020-01-01T17:59:59.001Z"), client_id: 1 },
-    { comanda_id: 2, data_hora: new Date("2020-01-01T16:59:59.001Z"), lliurament: 1, producte_id: 2, quantitat: 1, preu_total: 12, botiga_id: 1, empleat_id: 2, data_hora_lliurament: new Date("2020-01-01T17:59:59.001Z"), client_id: 2 },
-    { comanda_id: 3, data_hora: new Date("2020-01-02T18:00:00.001Z"), lliurament: 0, producte_id: 3, quantitat: 1, preu_total: 13, botiga_id: 2, empleat_id: 3, client_id: 3 },
-    { comanda_id: 4, data_hora: new Date("2020-01-02T18:30:30.001Z"), lliurament: 1, producte_id: 4, quantitat: 1, preu_total: 14, botiga_id: 2, empleat_id: 4, data_hora_lliurament: new Date("2020-01-02T19:00:00.001Z"), client_id: 4 },
-    { comanda_id: 5, data_hora: new Date("2020-01-03T18:00:00.001Z"), lliurament: 0, producte_id: 5, quantitat: 1, preu_total: 15, botiga_id: 1, empleat_id: 1, client_id: 5 },
-    { comanda_id: 6, data_hora: new Date("2020-02-01T18:00:00.001Z"), lliurament: 1, producte_id: 6, quantitat: 1, preu_total: 3, botiga_id: 1, empleat_id: 2, client_id: 1 },
-    { comanda_id: 7, data_hora: new Date("2020-03-01T18:00:00.001Z"), lliurament: 0, producte_id: 7, quantitat: 1, preu_total: 4, botiga_id: 2, empleat_id: 3, client_id: 6 },
-    { comanda_id: 8, data_hora: new Date("2020-03-01T18:00:00.001Z"), lliurament: 0, producte_id: 2, quantitat: 1, preu_total: 12, botiga_id: 2, empleat_id: 3, client_id: 6 },
-    { comanda_id: 9, data_hora: new Date("2020-03-01T18:00:00.001Z"), lliurament: 0, producte_id: 7, quantitat: 1, preu_total: 4, botiga_id: 2, empleat_id: 3, client_id: 6 },
+db.tiquets.insertMany([
+    { tiquet_id: 1, data_hora: new Date("2020-01-01T16:59:59.001Z"), lliurament: 1, botiga_id: 1, empleat_id: 2, client_id: 1, data_hora_lliurament: new Date("2020-01-01T17:59:59.001Z"), comandes: [{
+            producte_id: 2, quantitat: 1, preu_total: 12
+        }, {
+            producte_id: 1, quantitat: 1, preu_total: 10
+        }]
+    },
+    { tiquet_id: 2, data_hora: new Date("2020-01-01T16:59:59.001Z"), lliurament: 1, botiga_id: 1, empleat_id: 2, client_id: 6,  data_hora_lliurament: new Date("2020-01-01T17:59:59.001Z"), comandes: [{
+        producte_id: 2, quantitat: 1, preu_total: 12
+    }]},
+    { tiquet_id: 3, data_hora: new Date("2020-01-02T18:00:00.001Z"), lliurament: 0, botiga_id: 2, empleat_id: 3, client_id: 3, comandes: [{
+        producte_id: 3, quantitat: 1, preu_total: 13 
+    }]},
+    { tiquet_id: 4, data_hora: new Date("2020-01-02T18:30:30.001Z"), lliurament: 1, botiga_id: 2, empleat_id: 4, client_id: 4, data_hora_lliurament: new Date("2020-01-02T19:00:00.001Z"), comandes: [{
+        producte_id: 4, quantitat: 1, preu_total: 14 
+    }]},
+    { tiquet_id: 5, data_hora: new Date("2020-01-03T18:00:00.001Z"), lliurament: 0, botiga_id: 1, empleat_id: 1, client_id: 5, comandes: [{
+        producte_id: 5, quantitat: 1, preu_total: 15 
+    }]},
+    { tiquet_id: 6, data_hora: new Date("2020-02-01T18:00:00.001Z"), lliurament: 1, botiga_id: 1, empleat_id: 2, client_id: 1, comandes: [{
+        producte_id: 6, quantitat: 1, preu_total: 3 
+    }]},
+    { tiquet_id: 8, data_hora: new Date("2020-03-01T18:00:00.001Z"), lliurament: 0, botiga_id: 2, empleat_id: 3, client_id: 6, comandes: [{
+        producte_id: 7, quantitat: 1, preu_total: 4 
+    }, {
+        producte_id: 2, quantitat: 1, preu_total: 12
+    }, {
+        producte_id: 6, quantitat: 1, preu_total: 3
+    }]}
 ])
 
-// Llista quants productes de la categoria 'begudes' s'han venut en una determinada localitat
-// botiga_id = 2 está en localitat_id = 2
-db.comandes.find(
-    { botiga_id: 2, producte_id: 6, producte_id: 7 }
+// // Llista quants productes de la categoria 'begudes' s'han venut en una determinada localitat
+// // botiga_id = 2 está en localitat_id = 2, product_id = 6 or 7
+db.tiquets.find(
+    { botiga_id: 2, $or: [{comandes: { $elemMatch: { producte_id: 6 }}}, {comandes: { $elemMatch: { producte_id: 7 }}}] }
 ).pretty()
 
-// Llista quantes comandes ha efectuat un determinat empleat
-db.comandes.find(
+// // Llista quantes comandes ("tiquets") ha efectuat un determinat empleat
+db.tiquets.find(
     { empleat_id: 3 }
 ).pretty()

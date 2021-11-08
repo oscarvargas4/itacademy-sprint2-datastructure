@@ -1,6 +1,10 @@
 // use optica
 db = db.getSiblingDB('optica')
 
+db.dropDatabase()
+
+db = db.getSiblingDB('optica')
+
 
 // https://docs.mongodb.com/manual/reference/operator/query/jsonSchema/
 db.createCollection("proveidors", {
@@ -48,38 +52,6 @@ db.proveidors.insert({proveidor_id: 1, nom: "proveidor1", carrer: "carrer1", car
 db.proveidors.insert({proveidor_id: 2, nom: "proveidor2", carrer: "carrer2", carrer_numero: 2, pis: 2, porta: 2, codi_postal: 08001, pais: "Espanya", telefon: 123456780, FAX: "123456780", NIF: "A123456780"})
 db.proveidors.insert({proveidor_id: 3, nom: "proveidor3", carrer: "carrer3", carrer_numero: 3, pis: 3, porta: 3, codi_postal: 08003, pais: "Espanya", telefon: 123456781, FAX: "123456780", NIF: "A123456781"})
 db.proveidors.insert({proveidor_id: 4, nom: "proveidor4", carrer: "carrer4", carrer_numero: 4, pis: 4, porta: 4, codi_postal: 08004, pais: "Espanya", telefon: 123456782, FAX: "123456780", NIF: "A123456782"})
-
-db.createCollection("marques", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["marca_id", "nom_marca", "proveidor_id"],
-            properties: {
-                marca_id: {
-                    bsonType: "number"
-                },
-                nom_marca: {
-                    bsonType: "string"
-                },
-                proveidor_id: {
-                    bsonType: "number"
-                }
-            }
-        }
-    }
-})
-
-db.marques.insertMany([
-    { marca_id: 1, nom_marca: "marca1", proveidor_id: 1 },
-    { marca_id: 2, nom_marca: "marca2", proveidor_id: 1 },
-    { marca_id: 3, nom_marca: "marca3", proveidor_id: 1 },
-    { marca_id: 4, nom_marca: "marca4", proveidor_id: 1 },
-    { marca_id: 5, nom_marca: "marca5", proveidor_id: 4 },
-    { marca_id: 6, nom_marca: "marca6", proveidor_id: 4 },
-    { marca_id: 7, nom_marca: "marca7", proveidor_id: 2 },
-    { marca_id: 8, nom_marca: "marca8", proveidor_id: 2 },
-    { marca_id: 9, nom_marca: "marca9", proveidor_id: 3 }
-])
 
 db.createCollection("empleats", {
     validator: {
@@ -199,23 +171,23 @@ db.createCollection("ulleres", {
 })
 
 db.ulleres.insertMany([
-    { ullera_id: 1, graduacio_vidre1: 10, graduacio_vidre2: 10, tipus_montura: "flotant", color_montura: "negre", color_vidres: "transparent", preu: 500, proveidor_id: 1, marca_id: 1, client_id: 1, factura_date: new Date("2020-01-30"), empleat_id: "1" },
-    { ullera_id: 2, graduacio_vidre1: 20, graduacio_vidre2: 20, tipus_montura: "pasta", color_montura: "negre", color_vidres: "transparent", preu: 600, proveidor_id: 1, marca_id: 2, client_id: 1, factura_date: new Date("2020-01-30"), empleat_id: "2" },
-    { ullera_id: 3, graduacio_vidre1: 30, graduacio_vidre2: 30, tipus_montura: "metalica", color_montura: "negre", color_vidres: "transparent", preu: 700, proveidor_id: 1, marca_id: 3, client_id: 1, factura_date: new Date("2020-01-30"), empleat_id: "3" },
-    { ullera_id: 4, graduacio_vidre1: 40, graduacio_vidre2: 40, tipus_montura: "flotant", color_montura: "negre", color_vidres: "transparent", preu: 800, proveidor_id: 1, marca_id: 4, client_id: 2, factura_date: new Date("2020-02-02"), empleat_id: "4" },
-    { ullera_id: 5, graduacio_vidre1: 50, graduacio_vidre2: 50, tipus_montura: "flotant", color_montura: "blau", color_vidres: "transparent", preu: 500, proveidor_id: 4, marca_id: 5, client_id: 3, factura_date: new Date("2020-03-12"), empleat_id: "1" },
-    { ullera_id: 6, graduacio_vidre1: 60, graduacio_vidre2: 60, tipus_montura: "pasta", color_montura: "blau", color_vidres: "transparent", preu: 600, proveidor_id: 4, marca_id: 6, client_id: 4, factura_date: new Date("2020-04-30"), empleat_id: "2" },
-    { ullera_id: 7, graduacio_vidre1: 70, graduacio_vidre2: 70, tipus_montura: "metalica", color_montura: "blau", color_vidres: "transparent", preu: 700, proveidor_id: 2, marca_id: 7, client_id: 5, factura_date: new Date("2020-05-03"), empleat_id: "3" },
-    { ullera_id: 8, graduacio_vidre1: 80, graduacio_vidre2: 80, tipus_montura: "metalica", color_montura: "vermell", color_vidres: "transparent", preu: 800, proveidor_id: 2, marca_id: 8, client_id: 6, factura_date: new Date("2020-05-08"), empleat_id: "4" },
-    { ullera_id: 9, graduacio_vidre1: 20, graduacio_vidre2: 20, tipus_montura: "pasta", color_montura: "vermell", color_vidres: "transparent", preu: 700, proveidor_id: 3, marca_id: 9, client_id: 7, factura_date: new Date("2020-06-02"), empleat_id: "1" },
-    { ullera_id: 10, graduacio_vidre1: 20, graduacio_vidre2: 30, tipus_montura: "pasta", color_montura: "vermell", color_vidres: "transparent", preu: 800, proveidor_id: 3, marca_id: 9, client_id: 8, factura_date: new Date("2020-06-10"), empleat_id: "2" },
-    { ullera_id: 11, graduacio_vidre1: 30, graduacio_vidre2: 20, tipus_montura: "pasta", color_montura: "vermell", color_vidres: "transparent", preu: 800, proveidor_id: 3, marca_id: 9, client_id: 9, factura_date: new Date("2020-06-15"), empleat_id: "3" },
-    { ullera_id: 12, graduacio_vidre1: 20, graduacio_vidre2: 30, tipus_montura: "pasta", color_montura: "negre", color_vidres: "transparent", preu: 500, proveidor_id: 1, marca_id: 2, client_id: 10, factura_date: new Date("2020-06-20"), empleat_id: "4" },
-    { ullera_id: 13, graduacio_vidre1: 30, graduacio_vidre2: 20, tipus_montura: "pasta", color_montura: "negre", color_vidres: "transparent", preu: 600, proveidor_id: 1, marca_id: 2, client_id: 10, factura_date: new Date("2020-06-21"), empleat_id: "1" },
-    { ullera_id: 14, graduacio_vidre1: 60, graduacio_vidre2: 50, tipus_montura: "flotant", color_montura: "blau", color_vidres: "transparent", preu: 600, proveidor_id: 4, marca_id: 5, client_id: 9, factura_date: new Date("2020-06-22"), empleat_id: "2" },
-    { ullera_id: 15, graduacio_vidre1: 50, graduacio_vidre2: 60, tipus_montura: "flotant", color_montura: "blau", color_vidres: "transparent", preu: 650, proveidor_id: 4, marca_id: 5, client_id: 7, factura_date: new Date("2020-06-23"), empleat_id: "3" },
-    { ullera_id: 16, graduacio_vidre1: 40, graduacio_vidre2: 80, tipus_montura: "metalica", color_montura: "vermell", color_vidres: "transparent", preu: 800, proveidor_id: 2, marca_id: 8, client_id: 8, factura_date: new Date("2020-06-24"), empleat_id: "4" },
-    { ullera_id: 17, graduacio_vidre1: 40, graduacio_vidre2: 40, tipus_montura: "metalica", color_montura: "vermell", color_vidres: "transparent", preu: 600, proveidor_id: 2, marca_id: 8, client_id: 8, factura_date: new Date("2020-06-24"), empleat_id: "4" },
+    { ullera_id: 1, graduacio_vidre1: 10, graduacio_vidre2: 10, tipus_montura: "flotant", color_montura: "negre", color_vidres: "transparent", preu: 500, proveidor_id: 1, marca_id: 1, client_id: 1, factura_date: new Date("2020-01-30"), empleat_id: 1 },
+    { ullera_id: 2, graduacio_vidre1: 20, graduacio_vidre2: 20, tipus_montura: "pasta", color_montura: "negre", color_vidres: "transparent", preu: 600, proveidor_id: 1, marca_id: 2, client_id: 1, factura_date: new Date("2020-01-30"), empleat_id: 2 },
+    { ullera_id: 3, graduacio_vidre1: 30, graduacio_vidre2: 30, tipus_montura: "metalica", color_montura: "negre", color_vidres: "transparent", preu: 700, proveidor_id: 1, marca_id: 3, client_id: 1, factura_date: new Date("2020-01-30"), empleat_id: 3 },
+    { ullera_id: 4, graduacio_vidre1: 40, graduacio_vidre2: 40, tipus_montura: "flotant", color_montura: "negre", color_vidres: "transparent", preu: 800, proveidor_id: 1, marca_id: 4, client_id: 2, factura_date: new Date("2020-02-02"), empleat_id: 4 },
+    { ullera_id: 5, graduacio_vidre1: 50, graduacio_vidre2: 50, tipus_montura: "flotant", color_montura: "blau", color_vidres: "transparent", preu: 500, proveidor_id: 4, marca_id: 5, client_id: 3, factura_date: new Date("2020-03-12"), empleat_id: 1 },
+    { ullera_id: 6, graduacio_vidre1: 60, graduacio_vidre2: 60, tipus_montura: "pasta", color_montura: "blau", color_vidres: "transparent", preu: 600, proveidor_id: 4, marca_id: 6, client_id: 4, factura_date: new Date("2020-04-30"), empleat_id: 2 },
+    { ullera_id: 7, graduacio_vidre1: 70, graduacio_vidre2: 70, tipus_montura: "metalica", color_montura: "blau", color_vidres: "transparent", preu: 700, proveidor_id: 2, marca_id: 7, client_id: 5, factura_date: new Date("2020-05-03"), empleat_id: 3 },
+    { ullera_id: 8, graduacio_vidre1: 80, graduacio_vidre2: 80, tipus_montura: "metalica", color_montura: "vermell", color_vidres: "transparent", preu: 800, proveidor_id: 2, marca_id: 8, client_id: 6, factura_date: new Date("2020-05-08"), empleat_id: 4 },
+    { ullera_id: 9, graduacio_vidre1: 20, graduacio_vidre2: 20, tipus_montura: "pasta", color_montura: "vermell", color_vidres: "transparent", preu: 700, proveidor_id: 3, marca_id: 9, client_id: 7, factura_date: new Date("2020-06-02"), empleat_id: 1 },
+    { ullera_id: 10, graduacio_vidre1: 20, graduacio_vidre2: 30, tipus_montura: "pasta", color_montura: "vermell", color_vidres: "transparent", preu: 800, proveidor_id: 3, marca_id: 9, client_id: 8, factura_date: new Date("2020-06-10"), empleat_id: 2 },
+    { ullera_id: 11, graduacio_vidre1: 30, graduacio_vidre2: 20, tipus_montura: "pasta", color_montura: "vermell", color_vidres: "transparent", preu: 800, proveidor_id: 3, marca_id: 9, client_id: 9, factura_date: new Date("2020-06-15"), empleat_id: 3 },
+    { ullera_id: 12, graduacio_vidre1: 20, graduacio_vidre2: 30, tipus_montura: "pasta", color_montura: "negre", color_vidres: "transparent", preu: 500, proveidor_id: 1, marca_id: 2, client_id: 10, factura_date: new Date("2020-06-20"), empleat_id: 4 },
+    { ullera_id: 13, graduacio_vidre1: 30, graduacio_vidre2: 20, tipus_montura: "pasta", color_montura: "negre", color_vidres: "transparent", preu: 600, proveidor_id: 1, marca_id: 2, client_id: 10, factura_date: new Date("2020-06-21"), empleat_id: 1 },
+    { ullera_id: 14, graduacio_vidre1: 60, graduacio_vidre2: 50, tipus_montura: "flotant", color_montura: "blau", color_vidres: "transparent", preu: 600, proveidor_id: 4, marca_id: 5, client_id: 9, factura_date: new Date("2020-06-22"), empleat_id: 2 },
+    { ullera_id: 15, graduacio_vidre1: 50, graduacio_vidre2: 60, tipus_montura: "flotant", color_montura: "blau", color_vidres: "transparent", preu: 650, proveidor_id: 4, marca_id: 5, client_id: 7, factura_date: new Date("2020-06-23"), empleat_id: 3 },
+    { ullera_id: 16, graduacio_vidre1: 40, graduacio_vidre2: 80, tipus_montura: "metalica", color_montura: "vermell", color_vidres: "transparent", preu: 800, proveidor_id: 2, marca_id: 8, client_id: 8, factura_date: new Date("2020-06-24"), empleat_id: 4 },
+    { ullera_id: 17, graduacio_vidre1: 40, graduacio_vidre2: 40, tipus_montura: "metalica", color_montura: "vermell", color_vidres: "transparent", preu: 600, proveidor_id: 2, marca_id: 8, client_id: 8, factura_date: new Date("2020-06-24"), empleat_id: 4 },
 
 ])
 
