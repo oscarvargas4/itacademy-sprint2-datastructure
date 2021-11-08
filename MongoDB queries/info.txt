@@ -1,2 +1,18 @@
 1) https://docs.mongodb.com/database-tools/mongoimport/#examples
 
+2) For 4.4 mongodb version you need to download database tools and paste it on mongodb file:
+    https://www.mongodb.com/try/download/database-tools
+
+3) Command Line to import database from "restaurant.json" (remember to cd "Location File"): 
+    mongoimport --db=restaurants --collection=restaurants --file=restaurants.json
+
+4) Queries with strings:
+    https://www.geeksforgeeks.org/mongodb-regex/
+
+5) Regular Expressions (regex):
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+
+6) MongoDB Regex:
+    https://docs.mongodb.com/manual/reference/operator/query/regex/#examples
+    https://www.thecodebuzz.com/mongodb-regex-like-query-case-sensitive-pattern/
+    
