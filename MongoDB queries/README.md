@@ -35,6 +35,7 @@ Then you have to execute the command line (remember to "cd" to "restaurants.json
 27.	Escriu una consulta a organitzar el nom de la cuisine en ordre ascendent i per el mateix barri de cuisine. Ordre descendint
 28.	Escriu una consulta per saber tant si totes les direccions contenen el carrer o no
 29.	Escriu una consulta quin seleccionarà tots el documents en la col·lecció de restaurants on el valor del camp coord és Double
-30.	Escriu una consulta quin seleccionarà el restaurant_id, name i grade per a aquells restaurants quins retorns 0 com a resta després de dividir el marcador per 7
+30.	Escriu una consulta que seleccionarà el restaurant_id, name i grade per a aquells restaurants
+que retornen 0 com a residu després de dividir algun dels seus score per 7
 31.	Escriu una consulta per trobar el name de restaurant, borough, longitud i altitud i cuisine per a aquells restaurants que contenen 'mon' com tres lletres en algun lloc del seu name
 32.	Escriu una consulta per trobar el name de restaurant, borough, longitud i latitud i cuisine per a aquells restaurants que conteinen 'Mad' com primeres tres lletres del seu name

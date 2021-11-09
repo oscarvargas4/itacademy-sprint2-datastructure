@@ -212,19 +212,15 @@ db.restaurants.find({
 
 // 29. Escriu una consulta quin seleccionarà tots el documents en la col·lecció de restaurants on el valor del camp coord és Double
 db.restaurants.find({
-    $or: [
-        { "address.coord.1": { $type: "double" }},
-        { "address.coord.2": { $type: "double" }}
+    $and: [
+        { "address.coord.0": { $type: "double" }},
+        { "address.coord.1": { $type: "double" }}
     ]
 }).pretty()
 
-// 30.	Escriu una consulta quin seleccionarà el restaurant_id, name i grade per a aquells restaurants quins 
-// retorns 0 com a resta després de dividir el marcador per 7
-db.restaurants.find({}, {
-    address: 0,
-    borough: 0,
-    cuisine: 0
-}).pretty()
+// 30.	Escriu una consulta que seleccionarà el restaurant_id, name i grade per a aquells restaurants
+// que retornen 0 com a residu després de dividir algun dels seus score per 7
+db.restaurants.find({ "grades.score": { $mod: [7,0] }}, { restaurant_id: 1, name: 1, grades:1 }).pretty()
 
 // 31. Escriu una consulta per trobar el name de restaurant, borough, longitud i altitud i cuisine per a aquells restaurants
 //  que contenen 'mon' com tres lletres en algun lloc del seu name
