@@ -1,4 +1,10 @@
-Tenim una col·lecció d'Objectes Restaurant a la ciutat de Nueva York, i necessitem algunes consultes.... pots ajudar-nos?
+To execute the "queries.js" file, you must have installed mongoimport.exe in /mongodb/bin/ file.
+Then you have to execute the command line (remember to "cd" to "restaurants.json" file) to import the data:
+
+    mongoimport --db=restaurants --collection=restaurants --file=restaurants.json
+
+
+## Tenim una col·lecció d'Objectes Restaurant a la ciutat de Nueva York, i necessitem algunes consultes.... pots ajudar-nos?
 
 1.	Escriu una consulta per mostrar tots els documents en la col·lecció Restaurants
 2.	Escriu una consulta per mostrar el restaurant_id, name, borough i cuisine per tots els documents en la col·lecció Restaurants
