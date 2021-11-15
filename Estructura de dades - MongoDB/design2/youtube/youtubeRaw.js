@@ -168,6 +168,28 @@ db.createCollection("videos", {
                             }
                         }
                     }
+                },
+                labels_enrollment: {
+                    bsonType: ["array"],
+                    items: {
+                        bsonType: "object",
+                        required: ["id", "label_id"],
+                        properties: {
+                            id: { bsonType: "number" },
+                            label_id: { bsonType: "number" }
+                        }
+                    }
+                },
+                playlist_enrollment: {
+                    bsonType: ["array"],
+                    items: {
+                        bsonType: "object",
+                        required: ["id", "playlist_id"],
+                        properties: {
+                            id: { bsonType: "number" },
+                            playlist_id: { bsonType: "number" }
+                        }
+                    }
                 }
             }
         }
@@ -181,6 +203,10 @@ db.videos.insertMany([
         },{
             id: 2, date_hour: new Date("2020-01-01T16:00:00.001Z"), user_id: 2, ld_type: 2
         }
+    ], labels_enrollment: [
+        { id: 1, label_id: 1 }
+    ], playlist_enrollment: [
+        { id: 1, playlist_id: 1 }
     ]},
     { video_id: 2, title: "video2", description: "description2", size: 2000, file_name: "file2", duration: 70, thumbnail_url: "url2", views: 20, state: 1, date_hour: new Date("2020-01-01T16:00:02.001Z"), user_id: 2, likes_dislikes: [
         {
@@ -188,6 +214,8 @@ db.videos.insertMany([
         },{
             id: 2, date_hour: new Date("2020-01-01T16:00:02.001Z"), user_id: 1, ld_type: 2
         }
+    ], playlist_enrollment: [
+        { id: 2, playlist_id: 2 }
     ]},
     { video_id: 3, title: "video3", description: "description3", size: 3000, file_name: "file3", duration: 80, thumbnail_url: "url3", views: 30, state: 1, date_hour: new Date("2020-01-01T16:00:03.001Z"), user_id: 3, likes_dislikes: [
         {
@@ -195,6 +223,8 @@ db.videos.insertMany([
         },{
             id: 2, date_hour: new Date("2020-01-01T16:00:03.001Z"), user_id: 2, ld_type: 2
         }
+    ], labels_enrollment: [
+        { id: 2, label_id: 2 }
     ]}
 ])
 
@@ -219,42 +249,6 @@ db.labels.insertMany([
     { label_id: 1, name: "name1" },
     { label_id: 2, name: "name2" },
 ])
-
-db.createCollection("labels_enrollment", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["id", "video_id", "label_id"],
-            properties: {
-                id: { bsonType: "number" },
-                video_id: { bsonType: "number" },
-                label_id: { bsonType: "number" }
-            }
-        }
-    }
-})
-
-db.labels_enrollment.insertMany([
-    { id: 1, video_id: 1, label_id: 1 },
-    { id: 2, video_id: 3, label_id: 2 }
-])
-
-
-
-db.createCollection("playlist_enrollment", {
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: ["id", "video_id", "playlist_id"],
-            properties: {
-                id: { bsonType: "number" },
-                video_id: { bsonType: "number" },
-                playlist_id: { bsonType: "number" }
-            }
-        }
-    }
-})
-
 
 db.createCollection("comments", {
     validator: {
